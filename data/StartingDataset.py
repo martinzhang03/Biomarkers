@@ -25,14 +25,18 @@ class StartingDataset(torch.utils.data.Dataset):
 
     def __getitem__(self, index):
         id = self.image_id.iloc[index]
-        label = torch.tensor(int(self.labels.iloc[index]), dtype=torch.long)  # No adjustment
+        label = torch.tensor(int(self.labels.iloc[index]), dtype=torch.float)  # No adjustment
 
         if self.training_set:
             img_path = constants.TRAIN_IMG_PATH + id
         else:
             img_path = constants.TEST_IMG_PATH + id
 
-        image = img.open(img_path).convert('RGB').resize((400, 400))
+        # image = img.open(img_path).convert('RGB')
+        image = img.open(img_path)
+        image = image.convert('L')
+        image = image.resize((28, 28), img.BILINEAR)
+        # return((image), label)
         return (t.ToTensor()(image), label)
 
     def __len__(self):

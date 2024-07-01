@@ -1,282 +1,144 @@
-# # import torch
-# # import torch.nn as nn
-# # import torch.nn.functional as F
-
-# # # https://github.com/uclaacmai/leaf-us-alone
-
-# # import itertools
-
-# # class StartingNetwork(nn.Module):
-# #   # Input Shape is a tuple of size 3 ex: (1, 224, 224)
-# #   def __init__(self, input_shape=(1,224,224)):
-# #     # Call nn.Module's constructor--don't forget this
-# #     super().__init__()
-
-# #     # Define layers
-# #     # For our very simple model, we just flatten the inputs into a 1D tensor
-# #     size = list(itertools.accumulate(input_shape, lambda x, y: x * y))[-1]
-# #     print(size)
-
-# #     self.flatten = nn.Flatten()
-# #     self.fc1 = nn.Linear(size, 256)
-# #     self.fc2 = nn.Linear(256, 128)
-# #     self.fc3 = nn.Linear(128, 10)
-
-# #   def forward(self, x):
-# #     # Forward propagation
-# #     x = self.flatten(x)
-# #     x = self.fc1(x)
-# #     x = F.relu(x)
-
-# #     x = self.fc2(x)
-# #     x = F.relu(x)
-
-# #     x = self.fc3(x)
-
-# #     # No activation function at the end
-# #     # nn.CrossEntropyLoss takes care of it for us
-
-# #     return x
-
-
-
-# # class ConvNet(torch.nn.Module):
-# #     """
-# #     Basic logistic regression on 800x600x3 images.
-# #     """
-
-# #     def __init__(self):
-# #         super().__init__()
-
-# #         # TODO: Change the dimensions of layers to match that of our dataset (inputted)
-
-
-
-# #         # Conv2d expects the following arguments
-# #         #   - C, the number of channels in the input
-# #         #   - C', the number of channels in the output
-# #         #   - The filter size (called a kernel size in the documentation)
-# #         #     Below, we specify 5, so our filters will be of size 5x5.
-# #         #   - The amount of padding (default = 0)
-# #         self.conv1 = nn.Conv2d(3, 4, kernel_size=5, padding=2) # notice how we use padding to prevent dimension reduction
-# #         self.conv2 = nn.Conv2d(4, 8, kernel_size=3, padding=1)
-# #         # Pooling layer takes two arguments
-# #         #   - Filter size (in this case, 2x2)
-# #         #   - Stride
-# #         self.pool = nn.MaxPool2d(2, 2)
-
-# #         self.fc1 = nn.Linear(160000, 256)
-# #         self.fc2 = nn.Linear(256, 128)
-# #         self.fc3 = nn.Linear(128, 5)
-
-# #         # Original Code Here
-# #         # self.flatten = nn.Flatten()
-# #         # self.fc = nn.Linear(224 * 224 * 3, 1)
-# #         # self.sigmoid = nn.Sigmoid()
-
-# #     def forward(self, x):
-# #         # Comments below give the shape of x
-# #         # n is batch size
-
-# #         # (n, 1, 28, 28)
-# #         x = self.conv1(x)
-# #         x = F.relu(x)
-# #         # (n, 4, 28, 28)
-# #         x = self.pool(x)
-# #         # (n, 4, 14, 14)
-# #         # x = self.conv2(x)
-# #         # x = F.relu(x)
-# #         # (n, 8, 14, 14)
-# #         # x = self.pool(x)
-# #         # (n, 8, 7, 7)
-# #         x = torch.flatten(x, 1)
-# #         # x = torch.reshape(x, (-1, 8 * 7 * 7))
-# #         # (n, 8 * 7 * 7)
-# #         x = self.fc1(x)
-# #         x = F.relu(x)
-# #         # (n, 256)
-# #         x = self.fc2(x)
-# #         x = F.relu(x)
-# #         # (n, 128)
-# #         x = self.fc3(x)
-# #         # (n, 10)
-# #         return x
-
-# # StartingNetwork = ConvNet
-# # if (__name__ == "__main__"):
-# #   print("Starting Network Debug...")
-
-# #   import torchsummary
-
-# #   new_network = StartingNetwork()
-# #   torchsummary.summary(new_network, (3, 400, 400))
-
-
-
-# import torch
-# import torch.nn as nn
-# import torch.nn.functional as F
-# from torchsummary import summary
-# import itertools
-
-# # class StartingNetwork(nn.Module):
-# #   # Input Shape is a tuple of size 3 ex: (1, 224, 224)
-# #   def __init__(self, input_shape=(1,224,224)):
-# #     # Call nn.Module's constructor--don't forget this
-# #     super().__init__()
-
-# #     # Define layers
-# #     # For our very simple model, we just flatten the inputs into a 1D tensor
-# #     size = list(itertools.accumulate(input_shape, lambda x, y: x * y))[-1]
-# #     print(size)
-
-# #     self.flatten = nn.Flatten()
-# #     self.fc1 = nn.Linear(size, 256)
-# #     self.fc2 = nn.Linear(256, 128)
-# #     self.fc3 = nn.Linear(128, 10)
-
-# #   def forward(self, x):
-# #     # Forward propagation
-# #     x = self.flatten(x)
-# #     x = self.fc1(x)
-# #     x = F.relu(x)
-
-# #     x = self.fc2(x)
-# #     x = F.relu(x)
-
-# #     x = self.fc3(x)
-
-# #     # No activation function at the end
-# #     # nn.CrossEntropyLoss takes care of it for us
-
-# #     return x
-
-# class ConvNet(nn.Module):
-#     """
-#     Basic logistic regression on 800x600x3 images.
-#     """
-
-#     def __init__(self):
-#         super().__init__()
-
-#         self.conv1 = nn.Conv2d(3, 4, kernel_size=5, padding=2)
-#         self.conv2 = nn.Conv2d(4, 8, kernel_size=3, padding=1)
-#         self.pool = nn.MaxPool2d(2, 2)
-
-#         self.fc1 = nn.Linear(8 * 100 * 100, 256)  # Adjusting for the pooling layer
-#         self.fc2 = nn.Linear(256, 128)
-#         self.fc3 = nn.Linear(128, 107)  # 107 classes for ages -1 to 105
-
-#     def forward(self, x):
-#         x = self.conv1(x)
-#         x = F.relu(x)
-#         x = self.pool(x)
-#         x = self.conv2(x)
-#         x = F.relu(x)
-#         x = self.pool(x)
-#         x = torch.flatten(x, 1)
-#         x = self.fc1(x)
-#         x = F.relu(x)
-#         x = self.fc2(x)
-#         x = F.relu(x)
-#         x = self.fc3(x)
-#         return x
-
-# # Make sure to define the class name you want to import in the __init__.py
-# StartingNetwork = ConvNet
-
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-# https://github.com/uclaacmai/leaf-us-alone
-
-import itertools
-
-# class StartingNetwork(nn.Module):
-#   # Input Shape is a tuple of size 3 ex: (1, 224, 224)
-#   def __init__(self, input_shape=(1,224,224)):
-#     # Call nn.Module's constructor--don't forget this
-#     super().__init__()
-
-#     # Define layers
-#     # For our very simple model, we just flatten the inputs into a 1D tensor
-#     size = list(itertools.accumulate(input_shape, lambda x, y: x * y))[-1]
-#     print(size)
-
-#     self.flatten = nn.Flatten()
-#     self.fc1 = nn.Linear(size, 256)
-#     self.fc2 = nn.Linear(256, 128)
-#     self.fc3 = nn.Linear(128, 10)
-
-#   def forward(self, x):
-#     # Forward propagation
-#     x = self.flatten(x)
-#     x = self.fc1(x)
-#     x = F.relu(x)
-
-#     x = self.fc2(x)
-#     x = F.relu(x)
-
-#     x = self.fc3(x)
-
-#     # No activation function at the end
-#     # nn.CrossEntropyLoss takes care of it for us
-
-#     return x
-
-
-
 class ConvNet(torch.nn.Module):
-
     def __init__(self):
         super().__init__()
-        self.conv1 = nn.Conv2d(3, 4, kernel_size=5, padding=2) # notice how we use padding to prevent dimension reduction
-        self.conv2 = nn.Conv2d(4, 8, kernel_size=3, padding=1)
-        self.pool = nn.MaxPool2d(2, 2)
 
-        self.fc1 = nn.Linear(160000, 256)
-        self.fc2 = nn.Linear(256, 128)
-        self.fc3 = nn.Linear(128, 107)
+        # Adding more convolutional and pooling layers to reduce the size gradually
+        # self.c1 = nn.Conv2d(in_channels=3, out_channels=3, kernel_size=4, stride=2, padding=2, bias=True)
+        #self.c2 = nn.Conv2d(3, 512, kernel_size=3, stride=1, padding=1)
 
-        # Original Code Here
-        # self.flatten = nn.Flatten()
-        # self.fc = nn.Linear(224 * 224 * 3, 1)
-        # self.sigmoid = nn.Sigmoid()
+        # self.conv_reduce = nn.Conv2d(512, 512, kernel_size=3, stride=2, padding=1)  # Reduces 14x14 to 7x7
+        # self.pool = nn.AdaptiveAvgPool2d((1, 1))
 
+        # self.conv2 = nn.Conv2d(16, 32, kernel_size=3, padding=1)
+        # self.conv3 = nn.Conv2d(32, 64, kernel_size=3, padding=1)
+        # self.pool = nn.MaxPool2d(2, 2)
+
+        # model = torch.hub.load('pytorch/vision:v0.8.0', 'resnet18', pretrained=True)
+        # model = torch.hub.load("pytorch/vision", "resnet50", weights="IMAGENET1K_V2")
+        # self.resnet = torch.nn.Sequential(*(list(model.children())[:-1]))
+        # Adjust the input size for the first fully connected layer accordingly
+        # self.fc1 = nn.Linear(64 * 50 * 50, 512)  # Adjust dimensions after pooling and convolution layers
+        
+        # self.simplier = nn.Conv2d(3, 512, kernel_size=3, stride=1, padding=1)
+        # self.pool = nn.AdaptiveAvgPool2d((1, 1))
+
+        # self.fc2 = nn.Linear(512, 256)
+        # self.fc3 = nn.Linear(256, 128)
+        # self.fc4 = nn.Linear(128, 1)  # Assuming 10 classes for the output
+
+        # self.f1 = nn.Linear(512, 512)
+        # self.f2 = nn.Linear(512, 1)
+        # self.dropout = nn.Dropout(p=0.5)
+
+        model = torch.hub.load("pytorch/vision", "resnet50", weights="IMAGENET1K_V2")
+        self.conv1 = nn.Conv2d(in_channels=1, out_channels=1, kernel_size=24, stride = 2)
+        # self.conv2 = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3)
+        # self.pool = nn.MaxPool2d(kernel_size=2, stride=2)
+        self.flatten = nn.Flatten()
+        self.fc1 = nn.Linear(1 * 3 * 3, 1)  # Adjusted input dimensions
+        self.dropout1 = nn.Dropout(0.05)
+        # self.fc2 = nn.Linear(128, 64)
+        # self.dropout = nn.Dropout(0.1)
+        self.output = nn.Linear(4, 1)
+
+        # self.layer0 = nn.Sequential(
+        #     nn.
+        # )
+
+        # self.layer1 = nn.Sequential(
+        #     nn.Conv2d(3, 16, stride=1, kernel_size=3, padding=1),
+        #     nn.BatchNorm2d(16),
+        #     nn.ReLU(inplace=True)
+        # )
+
+        # self.layer2 = nn.Sequential(
+        #     nn.Conv2d(16, 32, stride=1, kernel_size=3, padding=1),
+        #     nn.BatchNorm2d(32),
+        #     nn.ReLU(inplace=True),
+        #     nn.MaxPool2d(stride=2, kernel_size=2),  # 30 80
+        # )
+
+        # self.layer3 = nn.Sequential(
+        #     nn.Conv2d(32, 64, stride=1, kernel_size=3, padding=1),
+        #     nn.BatchNorm2d(64),
+        #     nn.ReLU(inplace=True),
+        #     nn.Conv2d(64, 128, kernel_size=3, stride=1, padding=1),
+        #     nn.BatchNorm2d(128),
+        #     nn.ReLU(inplace=True),
+        #     nn.MaxPool2d(kernel_size=2, stride=2),   # 15 40
+        # )
+
+        # self.fc = nn.Sequential(
+        #     nn.Linear(6272, 2048),
+        #     nn.ReLU(inplace=True),
+        #     nn.Linear(2048, 1024),
+        #     nn.ReLU(inplace=True),
+        #     nn.Linear(1024, 40),
+        #     nn.ReLU(inplace=True),
+        #     nn.Linear(40, 1)
+        # )
+
+
+
+
+        
     def forward(self, x):
+        # x = self.c1(x) # (3 X 28 X 28) --> (3 X 14 X 14)
+        # nn.ReLU()
 
-        # (n, 1, 28, 28)
+        # # x = self.simplier(x) # (3 X 14 X 14) --> (512 X 14 X 14)
+        # x = self.resnet(x) # (3 X 14 X 14) --> (512 X 1 X 1)
+        # nn.ReLU()
+
+        # # x = self.conv_reduce(x) # (512x14x14) --> (512x7x7)
+        # # x = self.pool(x) # (512x7x7) --> (512x1x1)
+        # # nn.ReLU()
+
+        # x = torch.flatten(x, 1) # (512 X 1 X 1) --> (512)
+        # x = self.f1(x)
+        # nn.ReLU()
+
+        # nn.Dropout(p=0.5, inplace=True) # (512) --> (512)
+
+        # x = self.f2(x) # (512) --> (1)
+        # return x
+
+        # x = self.layer1(x)
+        # x = self.layer2(x)
+        # x = self.layer3(x)
+
+        # x = x.view(x.size(0), -1)
+        # x = self.fc(x)
+        # x = F.softmax(x, dim=-1)
+
         x = self.conv1(x)
         x = F.relu(x)
-        # (n, 4, 28, 28)
-        x = self.pool(x)
-        # (n, 4, 14, 14)
+        x = self.dropout1(x)
+
+        x = x.view(x.size(0), -1)
+
         # x = self.conv2(x)
-        # x = F.relu(x)
-        # (n, 8, 14, 14)
-        # x = self.pool(x)
-        # (n, 8, 7, 7)
-        x = torch.flatten(x, 1)
-        # x = torch.reshape(x, (-1, 8 * 7 * 7))
-        # (n, 8 * 7 * 7)
+        # nn.ReLU()
+        
+       # x = self.pool(x)
+
+        # x = self.flatten(x)
         x = self.fc1(x)
-        x = F.relu(x)
-        # (n, 256)
-        x = self.fc2(x)
-        x = F.relu(x)
-        # (n, 128)
-        x = self.fc3(x)
-        # (n, 10)
+        # x = self.dropout1(x)
+        # x = F.relu(self.fc2(x))
+        # x = self.dropout2(x)
+        # x = self.output(x)
+
         return x
 
 StartingNetwork = ConvNet
+
 if (__name__ == "__main__"):
-  print("Starting Network Debug...")
-
-  import torchsummary
-
-  new_network = StartingNetwork()
-  torchsummary.summary(new_network, (3, 400, 400))
-
+    print("Starting Network Debug...")
+    # import torchsummary
+    # new_network = StartingNetwork()
+    # torchsummary.summary(new_network, (3, 400, 400))

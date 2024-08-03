@@ -2,7 +2,14 @@ import os
 
 import constants
 from data.StartingDataset import StartingDataset
-from networks.StartingNetwork import StartingNetwork
+# from networks.StartingNetwork import StartingNetwork
+from networks.MST_Network import StartingNetwork
+# from networks.StartingNetwork_g1 import StartingNetwork_g1
+# from networks.StartingNetwork_g2 import StartingNetwork_g2
+# from networks.StartingNetwork_g3 import StartingNetwork_g3
+# from networks.StartingNetwork_g4 import StartingNetwork_g4
+# from networks.StartingNetwork_g5 import StartingNetwork_g5
+
 from train_functions.starting_train import starting_train
 import numpy as np
 
@@ -21,6 +28,9 @@ def main():
     train_dataset = StartingDataset(constants.TRAIN_CSV_PATH, constants.TRAIN_IMG_PATH)
     val_dataset = StartingDataset(constants.TEST_CSV_PATH, constants.TEST_IMG_PATH, training_set=False)
     model = StartingNetwork()
+
+
+
     # ex = train_dataset[1]
     # ex = np.array(ex[0])
     # print(len(ex))

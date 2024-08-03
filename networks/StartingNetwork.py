@@ -5,7 +5,6 @@ import torch.nn.functional as F
 class ConvNet(torch.nn.Module):
     def __init__(self):
         super().__init__()
-
         # Adding more convolutional and pooling layers to reduce the size gradually
         # self.c1 = nn.Conv2d(in_channels=3, out_channels=3, kernel_size=4, stride=2, padding=2, bias=True)
         #self.c2 = nn.Conv2d(3, 512, kernel_size=3, stride=1, padding=1)
